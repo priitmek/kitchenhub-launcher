@@ -1,7 +1,7 @@
 {
   "name": "Kitchen Hub",
   "short_name": "Kitchen Hub",
-  "start_url": "./",
+  "start_url": "./?launch=1",
   "scope": "./",
   "display": "standalone",
   "background_color": "#050505",
