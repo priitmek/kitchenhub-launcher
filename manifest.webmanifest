@@ -1,0 +1,21 @@
+{
+  "name": "Kitchen Hub",
+  "short_name": "Kitchen Hub",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "https://static.wixstatic.com/media/968414_34eefd4483eb4251b090156f19d3765c~mv2.png/v1/fit/w_192,h_192,al_c/KitchenHub.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://static.wixstatic.com/media/968414_34eefd4483eb4251b090156f19d3765c~mv2.png/v1/fit/w_512,h_512,al_c/KitchenHub.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
