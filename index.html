@@ -101,7 +101,9 @@
       const APP_URL = "https://script.google.com/a/*/macros/s/AKfycbzjif7jnraiCQYys4ZKFL4N5lFhCIPCuOMr11Mz5KpnDTnxdcJv8E3kASnyoMRtaIpYFA/exec";
       const standalone = window.navigator.standalone === true ||
         (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-      if (standalone) window.location.replace(APP_URL);
+      const launchedByManifest =
+        new URLSearchParams(window.location.search).get('launch') === '1';
+      if (standalone || launchedByManifest) window.location.replace(APP_URL);
     })();
   </script>
 </head>
