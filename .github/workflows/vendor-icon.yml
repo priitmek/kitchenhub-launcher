@@ -1,0 +1,55 @@
+name: Vendor Ryan's app icon
+
+on:
+  push:
+    paths:
+      - '.github/workflows/vendor-icon.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download current Ryan's logo once
+        run: |
+          curl --fail --location --retry 3 \
+            'https://static.wixstatic.com/media/968414_34eefd4483eb4251b090156f19d3765c~mv2.png' \
+            --output /tmp/ryans-logo.png
+
+      - name: Build square local icon
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image, ImageChops
+
+          src = Image.open('/tmp/ryans-logo.png').convert('RGBA')
+          bg = Image.new('RGBA', src.size, (0, 0, 0, 255))
+          rgb = Image.alpha_composite(bg, src).convert('RGB')
+
+          # Crop to visible artwork against the black logo background.
+          reference = Image.new('RGB', rgb.size, (0, 0, 0))
+          diff = ImageChops.difference(rgb, reference).convert('L')
+          bbox = diff.point(lambda p: 255 if p > 18 else 0).getbbox()
+          artwork = rgb.crop(bbox) if bbox else rgb
+
+          canvas = Image.new('RGB', (1024, 1024), (0, 0, 0))
+          max_w, max_h = 820, 720
+          artwork.thumbnail((max_w, max_h), Image.Resampling.LANCZOS)
+          x = (1024 - artwork.width) // 2
+          y = (1024 - artwork.height) // 2
+          canvas.paste(artwork, (x, y))
+          canvas.save('kitchenhub-icon.png', 'PNG', optimize=True)
+          PY
+
+      - name: Commit vendored icon
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kitchenhub-icon.png
+          git diff --cached --quiet && exit 0
+          git commit -m "Vendor Ryan's app icon"
+          git push
