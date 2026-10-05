@@ -95,9 +95,7 @@
       }
 
       document.title = 'Kitchen Hub';
-      // Keep the installer visible, but make Add to Home Screen capture the
-      // dedicated launcher URL rather than the Apps Script URL.
-      window.history.replaceState(null, '', './launch.html');
+      window.history.replaceState(null, '', './install.html?launch=1');
     })();
   </script>
 </head>
