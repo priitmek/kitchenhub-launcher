@@ -83,11 +83,32 @@
       line-height: 1.45;
       text-align: center;
     }
+    .desktop-only { display: none; }
+    html.is-desktop .mobile-only { display: none; }
+    html.is-desktop .desktop-only { display: block; }
+    .desktop-path {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #2c2c2c;
+    }
+    .desktop-path:first-of-type {
+      margin-top: 12px;
+      padding-top: 0;
+      border-top: 0;
+    }
+    .desktop-path strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .desktop-path ol { margin-top: 6px; }
   </style>
   <script>
     (() => {
       const APP_URL = "https://script.google.com/macros/s/AKfycbzjif7jnraiCQYys4ZKFL4N5lFhCIPCuOMr11Mz5KpnDTnxdcJv8E3kASnyoMRtaIpYFA/exec";
       const params = new URLSearchParams(window.location.search);
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+      if (!isMobile) document.documentElement.classList.add('is-desktop');
 
       if (params.get('launch') === '1') {
         window.location.replace(APP_URL);
@@ -107,7 +128,7 @@
     <h1>Kitchen Hub</h1>
     <p class="sub">Ryan's Hotel · Thirroul</p>
 
-    <section class="card">
+    <section class="card mobile-only">
       <strong>Add Kitchen Hub to your Home Screen</strong>
       <ol>
         <li>Open your browser's <strong>Share</strong> or <strong>menu</strong>.</li>
@@ -117,10 +138,35 @@
       </ol>
     </section>
 
+    <section class="card desktop-only">
+      <strong>Add Kitchen Hub to your desktop</strong>
+
+      <div class="desktop-path">
+        <strong>Chrome or Edge on Windows</strong>
+        <ol>
+          <li>Open the browser <strong>menu</strong> (⋮).</li>
+          <li>Choose <strong>Create shortcut</strong>. It may be under <strong>Save and share</strong>.</li>
+          <li>Keep the name <strong>Kitchen Hub</strong> and choose <strong>Create</strong>.</li>
+          <li>If <strong>Open as window</strong> is offered, leave it <strong>off</strong> so Kitchen Hub uses your normal browser session and Google sign-in.</li>
+        </ol>
+      </div>
+
+      <div class="desktop-path">
+        <strong>Mac</strong>
+        <ol>
+          <li>Leave this Kitchen Hub page open.</li>
+          <li>Drag the website icon or address from the browser's address bar onto your <strong>Desktop</strong>.</li>
+          <li>Rename the shortcut <strong>Kitchen Hub</strong> if needed.</li>
+          <li>Open it normally whenever you need Kitchen Hub.</li>
+        </ol>
+      </div>
+    </section>
+
     <div class="actions">
       <a class="button" href="https://script.google.com/macros/s/AKfycbzjif7jnraiCQYys4ZKFL4N5lFhCIPCuOMr11Mz5KpnDTnxdcJv8E3kASnyoMRtaIpYFA/exec">Open Kitchen Hub</a>
     </div>
-    <p class="note">The shortcut opens Kitchen Hub in your default browser and can use that browser's existing Google sign-in.</p>
+    <p class="note mobile-only">The shortcut opens Kitchen Hub in your default browser and can use that browser's existing Google sign-in.</p>
+    <p class="note desktop-only">The shortcut opens Kitchen Hub through the browser you create it from and can use that browser's existing Google sign-in.</p>
   </main>
 </body>
 </html>
