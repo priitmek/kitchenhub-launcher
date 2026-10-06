@@ -174,14 +174,13 @@
       window.history.replaceState(null, '', './install.html?launch=1');
 
       window.addEventListener('DOMContentLoaded', () => {
-        const launchUrl = window.location.href;
         const firefoxExe = '"C:\\Program Files\\Mozilla Firefox\\firefox.exe"';
-        const profileTarget = firefoxExe + ' -P "Kitchen Hub" -no-remote "' + launchUrl + '"';
-        const privateTarget = firefoxExe + ' -private-window "' + launchUrl + '"';
-        const profile = document.getElementById('firefoxProfileTarget');
+        const privateTarget = firefoxExe + ' -private-window "' + APP_URL + '"';
+        const profileTarget = firefoxExe + ' -P "Kitchen Hub" -no-remote "' + APP_URL + '"';
         const privateBox = document.getElementById('firefoxPrivateTarget');
-        if (profile) profile.textContent = profileTarget;
+        const profile = document.getElementById('firefoxProfileTarget');
         if (privateBox) privateBox.textContent = privateTarget;
+        if (profile) profile.textContent = profileTarget;
       });
 
       window.copyShortcutTarget_ = async (id, button) => {
@@ -221,27 +220,29 @@
       <strong>Add Kitchen Hub to your desktop</strong>
 
       <div class="desktop-path firefox-path">
-        <strong>Firefox on Windows <span class="recommended">Recommended</span></strong>
-        <p class="desktop-warning">If Firefox has several Google accounts signed in, the cleanest setup is a dedicated Kitchen Hub Firefox profile. It keeps the Function Manager's Google login separate without using Private Browsing every time.</p>
+        <strong>Firefox on a shared Windows PC <span class="recommended">Recommended</span></strong>
+        <p class="desktop-warning">Use a Firefox Private Window on shared computers. This keeps Kitchen Hub and the Function Manager's Google sign-in separate from the normal Firefox session and clears that private session after every private window has been closed.</p>
         <ol>
-          <li>In Firefox, enter <strong>about:profiles</strong> in the address bar.</li>
-          <li>Choose <strong>Create a New Profile</strong> and name it exactly <strong>Kitchen Hub</strong>.</li>
-          <li>Launch that profile and sign in to only the Google account approved for Kitchen Hub.</li>
           <li>On the Windows desktop, right-click and choose <strong>New → Shortcut</strong>.</li>
-          <li>Paste this target, then name the shortcut <strong>Kitchen Hub</strong>:</li>
+          <li>Paste the target below.</li>
+          <li>Name the shortcut <strong>Kitchen Hub</strong>.</li>
+          <li>Open Kitchen Hub using this shortcut and sign in with the approved Google account.</li>
+          <li>When finished, <strong>close every Firefox Private Window</strong> so the private Google and Kitchen Hub session is cleared.</li>
         </ol>
-        <div id="firefoxProfileTarget" class="shortcut-command">Preparing shortcut target…</div>
-        <button type="button" class="copy-button" onclick="copyShortcutTarget_('firefoxProfileTarget', this)">Copy shortcut target</button>
+        <div id="firefoxPrivateTarget" class="shortcut-command">Preparing private shortcut target…</div>
+        <button type="button" class="copy-button" onclick="copyShortcutTarget_('firefoxPrivateTarget', this)">Copy shortcut target</button>
 
         <div class="desktop-path">
-          <strong>Private-window fallback</strong>
-          <p class="desktop-warning">This opens Kitchen Hub in a Firefox Private Window automatically and avoids the mixed-account session. Private Browsing forgets its login/session when the last private window closes, so the dedicated profile above is better for everyday use.</p>
+          <strong>Personal or single-user PC</strong>
+          <p class="desktop-warning">If nobody else uses the computer, a dedicated Firefox profile can remember the correct Google account between sessions. Do not use this option on a shared staff computer.</p>
           <ol>
-            <li>Create a Windows desktop shortcut as above.</li>
-            <li>Use this target instead:</li>
+            <li>In Firefox, enter <strong>about:profiles</strong> in the address bar.</li>
+            <li>Choose <strong>Create a New Profile</strong> and name it exactly <strong>Kitchen Hub</strong>.</li>
+            <li>Launch that profile and sign in to only the Google account approved for Kitchen Hub.</li>
+            <li>Create a Windows desktop shortcut using this target:</li>
           </ol>
-          <div id="firefoxPrivateTarget" class="shortcut-command">Preparing private shortcut target…</div>
-          <button type="button" class="copy-button" onclick="copyShortcutTarget_('firefoxPrivateTarget', this)">Copy private shortcut target</button>
+          <div id="firefoxProfileTarget" class="shortcut-command">Preparing profile shortcut target…</div>
+          <button type="button" class="copy-button" onclick="copyShortcutTarget_('firefoxProfileTarget', this)">Copy personal-PC target</button>
         </div>
       </div>
 
@@ -270,7 +271,7 @@
       <a class="button" href="https://script.google.com/macros/s/AKfycbzjif7jnraiCQYys4ZKFL4N5lFhCIPCuOMr11Mz5KpnDTnxdcJv8E3kASnyoMRtaIpYFA/exec">Open Kitchen Hub</a>
     </div>
     <p class="note mobile-only">The shortcut opens Kitchen Hub in your default browser and can use that browser's existing Google sign-in.</p>
-    <p class="note desktop-only">For Firefox, the dedicated Kitchen Hub profile is the preferred setup when several Google accounts are used on the same computer.</p>
+    <p class="note desktop-only">On shared Firefox computers, use the Private Window shortcut and close every private window when finished. The shortcut opens the production Kitchen Hub address directly.</p>
   </main>
 </body>
 </html>
