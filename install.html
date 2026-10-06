@@ -101,14 +101,69 @@
       margin-bottom: 6px;
     }
     .desktop-path ol { margin-top: 6px; }
+    .firefox-path {
+      padding: 14px;
+      border: 1px solid #3d3326;
+      border-radius: 12px;
+      background: #15120e;
+    }
+    html.is-firefox .firefox-path {
+      border-color: #8f6c35;
+      background: #1a1510;
+    }
+    .recommended {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 6px;
+      border: 1px solid #8f6c35;
+      border-radius: 999px;
+      color: #e6be78;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      vertical-align: 1px;
+    }
+    .shortcut-command {
+      margin: 10px 0 0;
+      padding: 10px 11px;
+      border: 1px solid #2c2c2c;
+      border-radius: 9px;
+      background: #070707;
+      color: #e9e4dc;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      user-select: all;
+    }
+    .copy-button {
+      margin-top: 8px;
+      min-height: 36px;
+      border: 1px solid #45413a;
+      border-radius: 9px;
+      padding: 0 12px;
+      background: #1a1917;
+      color: #f7f1e7;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .desktop-warning {
+      margin: 9px 0 0;
+      color: #aaa39a;
+      font-size: 12px;
+      line-height: 1.45;
+    }
   </style>
   <script>
     (() => {
       const APP_URL = "https://script.google.com/macros/s/AKfycbzjif7jnraiCQYys4ZKFL4N5lFhCIPCuOMr11Mz5KpnDTnxdcJv8E3kASnyoMRtaIpYFA/exec";
       const params = new URLSearchParams(window.location.search);
       const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      const isFirefox = /Firefox\//i.test(navigator.userAgent);
 
       if (!isMobile) document.documentElement.classList.add('is-desktop');
+      if (isFirefox) document.documentElement.classList.add('is-firefox');
 
       if (params.get('launch') === '1') {
         window.location.replace(APP_URL);
@@ -117,6 +172,30 @@
 
       document.title = 'Kitchen Hub';
       window.history.replaceState(null, '', './install.html?launch=1');
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const launchUrl = window.location.href;
+        const firefoxExe = '"C:\\Program Files\\Mozilla Firefox\\firefox.exe"';
+        const profileTarget = firefoxExe + ' -P "Kitchen Hub" -no-remote "' + launchUrl + '"';
+        const privateTarget = firefoxExe + ' -private-window "' + launchUrl + '"';
+        const profile = document.getElementById('firefoxProfileTarget');
+        const privateBox = document.getElementById('firefoxPrivateTarget');
+        if (profile) profile.textContent = profileTarget;
+        if (privateBox) privateBox.textContent = privateTarget;
+      });
+
+      window.copyShortcutTarget_ = async (id, button) => {
+        const target = document.getElementById(id);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.textContent);
+          const previous = button.textContent;
+          button.textContent = 'Copied';
+          setTimeout(() => { button.textContent = previous; }, 1400);
+        } catch (error) {
+          window.getSelection().selectAllChildren(target);
+        }
+      };
     })();
   </script>
 </head>
@@ -140,6 +219,31 @@
 
     <section class="card desktop-only">
       <strong>Add Kitchen Hub to your desktop</strong>
+
+      <div class="desktop-path firefox-path">
+        <strong>Firefox on Windows <span class="recommended">Recommended</span></strong>
+        <p class="desktop-warning">If Firefox has several Google accounts signed in, the cleanest setup is a dedicated Kitchen Hub Firefox profile. It keeps the Function Manager's Google login separate without using Private Browsing every time.</p>
+        <ol>
+          <li>In Firefox, enter <strong>about:profiles</strong> in the address bar.</li>
+          <li>Choose <strong>Create a New Profile</strong> and name it exactly <strong>Kitchen Hub</strong>.</li>
+          <li>Launch that profile and sign in to only the Google account approved for Kitchen Hub.</li>
+          <li>On the Windows desktop, right-click and choose <strong>New → Shortcut</strong>.</li>
+          <li>Paste this target, then name the shortcut <strong>Kitchen Hub</strong>:</li>
+        </ol>
+        <div id="firefoxProfileTarget" class="shortcut-command">Preparing shortcut target…</div>
+        <button type="button" class="copy-button" onclick="copyShortcutTarget_('firefoxProfileTarget', this)">Copy shortcut target</button>
+
+        <div class="desktop-path">
+          <strong>Private-window fallback</strong>
+          <p class="desktop-warning">This opens Kitchen Hub in a Firefox Private Window automatically and avoids the mixed-account session. Private Browsing forgets its login/session when the last private window closes, so the dedicated profile above is better for everyday use.</p>
+          <ol>
+            <li>Create a Windows desktop shortcut as above.</li>
+            <li>Use this target instead:</li>
+          </ol>
+          <div id="firefoxPrivateTarget" class="shortcut-command">Preparing private shortcut target…</div>
+          <button type="button" class="copy-button" onclick="copyShortcutTarget_('firefoxPrivateTarget', this)">Copy private shortcut target</button>
+        </div>
+      </div>
 
       <div class="desktop-path">
         <strong>Chrome or Edge on Windows</strong>
@@ -166,7 +270,7 @@
       <a class="button" href="https://script.google.com/macros/s/AKfycbzjif7jnraiCQYys4ZKFL4N5lFhCIPCuOMr11Mz5KpnDTnxdcJv8E3kASnyoMRtaIpYFA/exec">Open Kitchen Hub</a>
     </div>
     <p class="note mobile-only">The shortcut opens Kitchen Hub in your default browser and can use that browser's existing Google sign-in.</p>
-    <p class="note desktop-only">The shortcut opens Kitchen Hub through the browser you create it from and can use that browser's existing Google sign-in.</p>
+    <p class="note desktop-only">For Firefox, the dedicated Kitchen Hub profile is the preferred setup when several Google accounts are used on the same computer.</p>
   </main>
 </body>
 </html>
